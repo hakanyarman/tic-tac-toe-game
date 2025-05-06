@@ -29,7 +29,7 @@ function Square({ value, onSquareClick }: SquareProps) {
 
 
 export default function Board() {
-
+  const [xIsNext, setXIsNext] = useState(true)
   const [squares, setSquares] = useState(Array(9).fill(null))
 
   const handleClick = (index: number): void => {
@@ -37,7 +37,24 @@ export default function Board() {
     // nextSquares became copy of squares now
     // arrayler doğrudan değiştirilmek yerine kopyası oluşturularak değiştirilmelidir
     //Doğrudan veri mutasyonundan kaçınmak, verilerin önceki sürümlerini bozulmadan saklamanıza ve daha sonra yeniden kullanmanıza olanak tanır.
-    nextSquares[index] = "X";
+    // {xIsNext ? nextSquares[index] = "X" : nextSquares[index] = "O"}
+    // JSX içinde süslü parantez {} yalnızca değer döndürmek için kullanılır; yan etki (side effect) içeren işlemler (örneğin = ile atama yapmak) JSX ifadesinde doğrudan kullanılamaz.
+    // şöyle kullanılabilirdi:
+    //nextSquares[index] = xIsNext ? "X" : "O"
+
+
+    // square'e önceden x veya o verilmişse yani değeri null değilse tekrar tıklandığında değeri değişmesin sabit kalsın.
+    if (squares[index]) {
+      return
+    }
+    
+    if (xIsNext) {
+      nextSquares[index] = "X"
+    } else {
+      nextSquares[index] = "O"
+    }
+    setXIsNext(!xIsNext)
+    // nextSquares[index] = "X";
     setSquares(nextSquares);
   }
   return (
@@ -60,7 +77,7 @@ export default function Board() {
       <div className="board-row">
         <Square value={squares[3]} onSquareClick={() => handleClick(3)} />
         <Square value={squares[4]} onSquareClick={() => handleClick(4)} />
-        <Square value={squares[5]} onSquareClick={() => handleClick(4)} />
+        <Square value={squares[5]} onSquareClick={() => handleClick(5)} />
       </div>
       <div className="board-row">
         <Square value={squares[6]} onSquareClick={() => handleClick(6)} />
