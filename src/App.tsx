@@ -20,11 +20,11 @@ import "./styles.css"
 
 interface SquareProps {
   value: string;
-  handleClick: () => void
+  onSquareClick: () => void
 }
 
-function Square({ value, handleClick }: SquareProps) {
-  return <button onClick={handleClick} className="square">{value}</button>
+function Square({ value, onSquareClick }: SquareProps) {
+  return <button onClick={onSquareClick} className="square">{value}</button>
 }
 
 
@@ -35,6 +35,8 @@ export default function Board() {
   const handleClick = (index: number): void => {
     const nextSquares = squares.slice();
     // nextSquares became copy of squares now
+    // arrayler doğrudan değiştirilmek yerine kopyası oluşturularak değiştirilmelidir
+    //Doğrudan veri mutasyonundan kaçınmak, verilerin önceki sürümlerini bozulmadan saklamanıza ve daha sonra yeniden kullanmanıza olanak tanır.
     nextSquares[index] = "X";
     setSquares(nextSquares);
   }
@@ -49,19 +51,21 @@ export default function Board() {
           etrafındaki parentezlere dikkat edin—ve fonksiyonun erken çalışmasının sebebi bu.
           handleClick  fonksiyonunu kullanıcı tıklayana kadar çağırmak istemezsiniz! */}
         {/* <Square value={squares[0]} handleClick={handleClick(0)} /> */}
-        <Square value={squares[0]} handleClick={() => handleClick(0)} />
-        <Square value={squares[1]} handleClick={() => handleClick(1)} />
-        <Square value={squares[2]} handleClick={() => handleClick(2)} />
+        <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
+        <Square value={squares[1]} onSquareClick={() => handleClick(1)} />
+        {/* React’te, olayları temsil eden prop’lar için onSomething olarak adlandırmak ve
+           bu olayları yöneten fonksiyonları handleSomething olarak adlandırmak gelenek haline gelmiştir. */}
+        <Square value={squares[2]} onSquareClick={() => handleClick(2)} />
       </div>
       <div className="board-row">
-        <Square value={squares[3]} handleClick={() => handleClick(3)} />
-        <Square value={squares[4]} handleClick={() => handleClick(4)} />
-        <Square value={squares[5]} handleClick={() => handleClick(5)} />
+        <Square value={squares[3]} onSquareClick={() => handleClick(3)} />
+        <Square value={squares[4]} onSquareClick={() => handleClick(4)} />
+        <Square value={squares[5]} onSquareClick={() => handleClick(4)} />
       </div>
       <div className="board-row">
-        <Square value={squares[6]} handleClick={() => handleClick(6)} />
-        <Square value={squares[7]} handleClick={() => handleClick(7)} />
-        <Square value={squares[8]} handleClick={() => handleClick(8)} />
+        <Square value={squares[6]} onSquareClick={() => handleClick(6)} />
+        <Square value={squares[7]} onSquareClick={() => handleClick(7)} />
+        <Square value={squares[8]} onSquareClick={() => handleClick(8)} />
       </div>
     </div>
   )
