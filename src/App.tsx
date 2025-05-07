@@ -23,12 +23,34 @@ interface SquareProps {
   onSquareClick: () => void
 }
 
+
 function Square({ value, onSquareClick }: SquareProps) {
   return <button onClick={onSquareClick} className="square">{value}</button>
 }
 
 
 export default function Board() {
+  function calculateWinner(squares : ( string | null )[]) {
+    const lines = [
+      [0,1,2],
+      [3,4,5],
+      [6,7,8],
+      [0,3,6],
+      [1,4,7],
+      [2,5,8],
+      [0,4,8],
+      [2,4,6],
+    ];
+  
+    for (let i = 0; i < lines.length; i++) {
+      const [a, b, c] = lines[i];
+      if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+        return squares[a];
+      }
+    }
+    return null;
+  }
+  
   const [xIsNext, setXIsNext] = useState(true)
   const [squares, setSquares] = useState(Array(9).fill(null))
 
@@ -44,7 +66,7 @@ export default function Board() {
 
 
     // square'e önceden x veya o verilmişse yani değeri null değilse tekrar tıklandığında değeri değişmesin sabit kalsın.
-    if (squares[index]) {
+    if (squares[index]|| calculateWinner(squares)) {
       return
     }
     
@@ -57,9 +79,18 @@ export default function Board() {
     // nextSquares[index] = "X";
     setSquares(nextSquares);
   }
+
+  const winner = calculateWinner(squares);
+  let status;
+  if (winner) {
+    status = "Kazanan: " + winner;
+  } else {
+    status = "Sıradaki oyuncu: " + (xIsNext ? "X" : "O");
+  }
   return (
     <div className="container">
       {/* div elementinin display özelliği block'tur yani bir sonraki element bir alt satırda başlar */}
+      <div className="status">{status}</div>
       <div className="board-row">
         {/* hata verir alttaki satır */}
         {/*
@@ -85,6 +116,6 @@ export default function Board() {
         <Square value={squares[8]} onSquareClick={() => handleClick(8)} />
       </div>
     </div>
-  )
+  )  
 }
 
